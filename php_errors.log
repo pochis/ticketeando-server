@@ -1,0 +1,14 @@
+[13-Feb-2018 17:13:12 UTC] PHP Parse error:  syntax error, unexpected '.', expecting '&' or variable (T_VARIABLE) in /home/ubuntu/workspace/vendor/illuminate/support/helpers.php on line 554
+[13-Feb-2018 17:13:12 UTC] PHP Stack trace:
+[13-Feb-2018 17:13:12 UTC] PHP   1. {main}() /home/ubuntu/workspace/public/index.php:0
+[13-Feb-2018 17:13:12 UTC] PHP   2. require() /home/ubuntu/workspace/public/index.php:14
+[13-Feb-2018 17:13:12 UTC] PHP   3. require_once() /home/ubuntu/workspace/bootstrap/app.php:3
+[13-Feb-2018 17:13:12 UTC] PHP   4. ComposerAutoloaderInit612ad1485ccf75964bff6326c3162f11::getLoader() /home/ubuntu/workspace/vendor/autoload.php:7
+[13-Feb-2018 17:13:12 UTC] PHP   5. composerRequire612ad1485ccf75964bff6326c3162f11() /home/ubuntu/workspace/vendor/composer/autoload_real.php:56
+[13-Feb-2018 17:13:12 UTC] PHP Parse error:  syntax error, unexpected '.', expecting '&' or variable (T_VARIABLE) in /home/ubuntu/workspace/vendor/illuminate/support/helpers.php on line 554
+[13-Feb-2018 17:13:12 UTC] PHP Stack trace:
+[13-Feb-2018 17:13:12 UTC] PHP   1. {main}() /home/ubuntu/workspace/public/index.php:0
+[13-Feb-2018 17:13:12 UTC] PHP   2. require() /home/ubuntu/workspace/public/index.php:14
+[13-Feb-2018 17:13:12 UTC] PHP   3. require_once() /home/ubuntu/workspace/bootstrap/app.php:3
+[13-Feb-2018 17:13:12 UTC] PHP   4. ComposerAutoloaderInit612ad1485ccf75964bff6326c3162f11::getLoader() /home/ubuntu/workspace/vendor/autoload.php:7
+[13-Feb-2018 17:13:12 UTC] PHP   5. composerRequire612ad1485ccf75964bff6326c3162f11() /home/ubuntu/workspace/vendor/composer/autoload_real.php:56

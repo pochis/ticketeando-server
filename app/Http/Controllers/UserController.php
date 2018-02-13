@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-class ExampleController extends Controller
+use App\User;
+
+class UserController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -14,5 +16,8 @@ class ExampleController extends Controller
         //
     }
 
-    //
+    public function getUsers(){
+     
+     return User::all();   
+    }
 }
