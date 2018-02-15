@@ -34,8 +34,12 @@ class AuthServiceProvider extends ServiceProvider
             $bearer = $request->header('authorization');
             
             if ($bearer) {
+                $ip_client=  getIp();
                 $token = explode(" ",$bearer);
+                $decoedToken= explode("~",base64_decode($token[1]));
+               if($decoedToken[1]==$ip_client){
                 return User::where('api_token', $token[1])->first();
+               }
             }
         });
     }

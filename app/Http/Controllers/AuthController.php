@@ -13,32 +13,48 @@ class AuthController extends Controller
         $this->validate($request, [
             'email' => 'required|email',
             'password' => 'required'
-        ],
-        [
-            'email.required'=>'El correo electronico es requerido',
-            'email.email'=>'El correo electronico no es valido',
-            'password.required'=>'La contraseña es requerida',
         ]);
  
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)->first([
+            'name', 
+            'lastname',
+            'email',
+            'password',
+            'birthday',
+            'phone',
+            'cellphone',
+            'genre',
+            'status',
+            'created_at',
+            'updated_at'
+        ]);
         
         if($user){
             if(Hash::check($request->password, $user->password)){
- 
-                  $apitoken = base64_encode(str_random(40));
-                  User::where('email', $request->email)->update(['api_token' => $apitoken]);
-         
-                  return response(['status' => 'success','api_token' => $apitoken,"user"=>$user],200);
+                  
+                  
+                  $ip_client=  getIp();
+                  $apitoken = base64_encode($user.'~'.$ip_client);
+                  
+                  $user= User::where('email', $request->email)->update(['api_token' => $apitoken]);
+                  
+                  if($user){
+                      return response(['status' => 'success','token' => $apitoken],200);
+                  }else{
+                      return response(['status'=>'fail','message'=>'An error occurred when trying to create the token'],401);
+                  }
          
               }else{
-                  return response(['status' => 'fail'],401);
+                  return response(['status' => 'fail','message'=>'The password is incorrect'],401);
          
               } 
         }
-             return response(['status' => 'fail'],401);
+             return response(['status' => 'fail','message'=>'An error occurred, please try later'],500);
          
     }
     public function logout(){
         
     }
+    
+ 
 }
