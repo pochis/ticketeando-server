@@ -22,6 +22,7 @@ class CreateUserTable extends Migration
             $table->string('phone',45)->nullable();
             $table->string('cellphone',45)->nullable();
             $table->tinyInteger('genre')->default(1);
+            $table->string('image',80)->nullable();
             $table->tinyInteger('status')->default(1);
             $table->text('api_token');
             $table->timestamps();

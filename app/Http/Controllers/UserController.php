@@ -3,9 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Traits\Files;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+    
+    use Files;
+    
     /**
      * Create a new controller instance.
      *
@@ -16,8 +21,7 @@ class UserController extends Controller
         //
     }
 
-    public function getUsers(){
-     
-     return User::all();   
-    }
+    public function show(Request $request,$id){
+        return response(['status' => 'success','user'=>User::find($id)],200);
+    } 
 }

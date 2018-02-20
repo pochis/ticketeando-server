@@ -12,7 +12,7 @@
 */
 
 $router->get('/', function () use ($router) {
-    return $router->app->version();
+    return 'API REST TICKETEA V1';
 });
 $router->group(['prefix' => 'api/v1'], function () use ($router) {
     
@@ -20,8 +20,13 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
     
     $router->group(['middleware' => 'auth'], function () use ($router) {
         
-         $router->get('users',  'UserController@getUsers');
-     
+         $router->post('logout',  'AuthController@logout');
+         
+         /*
+          *user paths group
+          */
+         $router->get('user/{id}',  'UserController@show');
+            
     });
    
 });

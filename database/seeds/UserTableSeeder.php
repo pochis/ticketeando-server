@@ -13,6 +13,7 @@ class UserTableSeeder extends Seeder
     {
         DB::table('user')->insert([
             'name' => 'Andres',
+            'lastname' => 'Arbelaez Acevedo',
             'email' => 'sheva852@hotmail.com',
             'password' => app('hash')->make(1234),
             'created_at' => new DateTime,

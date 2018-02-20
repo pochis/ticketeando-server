@@ -16,6 +16,7 @@ class AuthController extends Controller
         ]);
  
         $user = User::where('email', $request->email)->first([
+            'id',
             'name', 
             'lastname',
             'email',
@@ -52,8 +53,20 @@ class AuthController extends Controller
              return response(['status' => 'fail','message'=>'An error occurred, please try later'],500);
          
     }
-    public function logout(){
-        
+    public function logout(Request $request){
+        $this->validate($request, [
+            'userId' => 'required|numeric',
+        ]);
+        $user = User::find($request->userId);
+        if($user){
+            $user->api_token=null;
+            if($user->save()){
+                return response(['status' => 'success'],200);
+            }else{
+                return response(['status' => 'fail','message'=>"An error ocurred,can't remove token form user"],401);
+            }
+        }
+        return response(['status' => 'fail','message'=>'An error occurred, please try later'],500);
     }
     
  
