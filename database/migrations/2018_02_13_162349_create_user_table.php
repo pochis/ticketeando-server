@@ -25,6 +25,9 @@ class CreateUserTable extends Migration
             $table->string('image',80)->nullable();
             $table->tinyInteger('status')->default(1);
             $table->text('api_token');
+            $table->integer('country_id');
+            $table->integer('city_id');
+            $table->integer('state_id');
             $table->timestamps();
         });
     }

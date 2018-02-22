@@ -10,9 +10,9 @@ if (! function_exists('getIp')) {
      * @param  array  $array
      * @return string
      */
-    function getIp()
+    function getConnectedUserIp()
     {
-        return Util::getIp();
+        return Util::getConnectedUserIp();
     }
  }
 

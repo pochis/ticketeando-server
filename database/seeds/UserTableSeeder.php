@@ -16,6 +16,9 @@ class UserTableSeeder extends Seeder
             'lastname' => 'Arbelaez Acevedo',
             'email' => 'sheva852@hotmail.com',
             'password' => app('hash')->make(1234),
+            'country_id' => 47,
+            'state_id' => 776,
+            'city_id' => 12601,
             'created_at' => new DateTime,
             'updated_at' => new DateTime,
         ]);

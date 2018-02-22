@@ -32,12 +32,13 @@ class AuthServiceProvider extends ServiceProvider
 
         $this->app['auth']->viaRequest('api', function ($request) {
             $bearer = $request->header('authorization');
-            
-            if ($bearer) {
-                $ip_client=  getIp();
-                $token = explode(" ",$bearer);
+            $token = explode(" ",$bearer);
+          
+            if ($bearer && isset($token[1])) {
+                $ip_client = getConnectedUserIp();
+                
                 $decoedToken= explode("~",base64_decode($token[1]));
-               if($decoedToken[1]==$ip_client){
+               if($decoedToken[1] == $ip_client){
                 return User::where('api_token', $token[1])->first();
                }
             }

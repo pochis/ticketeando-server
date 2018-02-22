@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\Controller;
 
 class AuthController extends Controller
 {
@@ -15,26 +16,13 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
  
-        $user = User::where('email', $request->email)->first([
-            'id',
-            'name', 
-            'lastname',
-            'email',
-            'password',
-            'birthday',
-            'phone',
-            'cellphone',
-            'genre',
-            'status',
-            'created_at',
-            'updated_at'
-        ]);
+        $user = User::where('email', $request->email)->first();
         
         if($user){
             if(Hash::check($request->password, $user->password)){
                   
                   
-                  $ip_client=  getIp();
+                  $ip_client=  getConnectedUserIp();
                   $apitoken = base64_encode($user.'~'.$ip_client);
                   
                   $user= User::where('email', $request->email)->update(['api_token' => $apitoken]);

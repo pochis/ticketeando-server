@@ -23,9 +23,16 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
          $router->post('logout',  'AuthController@logout');
          
          /*
-          *user paths group
+          *user group paths
           */
          $router->get('user/{id}',  'UserController@show');
+         
+         /*
+          * regions group paths
+          */
+          $router->get('region/countries',  'RegionController@getCountries');
+          $router->get('region/country/states/{id}',  'RegionController@getStateByCountryId');
+          $router->get('region/states/cities/{id}',  'RegionController@getCitiesByStateId');
             
     });
    
