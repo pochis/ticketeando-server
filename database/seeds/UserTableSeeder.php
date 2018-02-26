@@ -19,6 +19,7 @@ class UserTableSeeder extends Seeder
             'country_id' => 47,
             'state_id' => 776,
             'city_id' => 12601,
+            'role_id' => 1,
             'created_at' => new DateTime,
             'updated_at' => new DateTime,
         ]);

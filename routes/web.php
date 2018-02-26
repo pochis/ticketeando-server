@@ -12,7 +12,7 @@
 */
 
 $router->get('/', function () use ($router) {
-    return 'API REST TICKETEA V1';
+    return 'Ticketea/API v1';
 });
 $router->group(['prefix' => 'api/v1'], function () use ($router) {
     
@@ -26,6 +26,9 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
           *user group paths
           */
          $router->get('user/{id}',  'UserController@show');
+         $router->put('user/{id}',  'UserController@update');
+         $router->put('user/password/update/{id}',  'UserController@changePassword');
+         $router->post('user/image/upload',  'UserController@uploadImage');
          
          /*
           * regions group paths

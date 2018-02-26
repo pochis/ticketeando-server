@@ -28,6 +28,7 @@ class CreateUserTable extends Migration
             $table->integer('country_id');
             $table->integer('city_id');
             $table->integer('state_id');
+            $table->integer('role_id');
             $table->timestamps();
         });
     }

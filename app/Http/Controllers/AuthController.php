@@ -16,19 +16,18 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
  
-        $user = User::where('email', $request->email)->first();
+        $user = User::with('role')->where('email', $request->email)->first();
         
         if($user){
             if(Hash::check($request->password, $user->password)){
                   
                   
                   $ip_client=  getConnectedUserIp();
-                  $apitoken = base64_encode($user.'~'.$ip_client);
+                  $apitoken = base64_encode(str_random(40).'~'.$ip_client);
+                  $user->api_token =$apitoken;
                   
-                  $user= User::where('email', $request->email)->update(['api_token' => $apitoken]);
-                  
-                  if($user){
-                      return response(['status' => 'success','token' => $apitoken],200);
+                  if($user->save()){
+                      return response(['status' => 'success','token' => $apitoken,'user'=>$user],200);
                   }else{
                       return response(['status'=>'fail','message'=>'An error occurred when trying to create the token'],401);
                   }
