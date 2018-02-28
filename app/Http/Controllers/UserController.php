@@ -56,7 +56,7 @@ class UserController extends Controller
         if ($user->save()) {
             return response(['status'=>'success','message'=>'Perfil actualizado'],200);
         } else {
-            return response(['status'=>'fail','message'=>'n error ocurred trying to update the user'],401);
+            return response(['status'=>'fail','message'=>'Ha ocurrido un error al tratar de actualizar el usuario,vuelve a intentarlo mas tarde'],500);
         }
     
     }
@@ -77,7 +77,7 @@ class UserController extends Controller
             if($user->image){
                File::delete($path."/".$user->image,$path."/medium/".$user->image,$path."/small/".$user->image);
             }
-            $filename=$this->singleFile($path, $request->image);
+            $filename=$this->singleFileImage($path, $request->image);
             $user->image = $filename;
             if($user->save()){
                 return response(['status'=>'success','image'=>$filename],200);

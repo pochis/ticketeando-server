@@ -12,7 +12,7 @@
 */
 
 $router->get('/', function () use ($router) {
-    return 'Ticketea/API v1';
+    return 'Ticketeando/API v1';
 });
 $router->group(['prefix' => 'api/v1'], function () use ($router) {
     
@@ -29,13 +29,28 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
          $router->put('user/{id}',  'UserController@update');
          $router->put('user/password/update/{id}',  'UserController@changePassword');
          $router->post('user/image/upload',  'UserController@uploadImage');
-         
          /*
           * regions group paths
           */
-          $router->get('region/countries',  'RegionController@getCountries');
-          $router->get('region/country/states/{id}',  'RegionController@getStateByCountryId');
-          $router->get('region/states/cities/{id}',  'RegionController@getCitiesByStateId');
+         $router->get('region/countries',  'RegionController@getCountries');
+         $router->get('region/country/states/{id}',  'RegionController@getStateByCountryId');
+         $router->get('region/states/cities/{id}',  'RegionController@getCitiesByStateId');
+         /*
+          * types group paths
+          */
+         $router->get('type/group/{id}','TypeController@getTypeByGroup');
+         /*
+          * categories group paths
+          */
+         $router->get('categories','CategoryController@getCategories');
+         /*
+          * project group paths
+          */
+         $router->get('projects','ProjectController@getProjects');
+         /*
+          * tickets group paths
+          */
+         $router->post('ticket','TicketController@store');
             
     });
    

@@ -51,6 +51,12 @@ class TypeTableSeeder extends Seeder
             'updated_at' => new DateTime,
         ]);
         DB::table('type')->insert([
+            'name' => 'Recibido',
+            'group_type_id' => 3,
+            'created_at' => new DateTime,
+            'updated_at' => new DateTime,
+        ]);
+        DB::table('type')->insert([
             'name' => 'En proceso',
             'group_type_id' => 3,
             'created_at' => new DateTime,

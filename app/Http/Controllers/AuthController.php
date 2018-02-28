@@ -33,7 +33,7 @@ class AuthController extends Controller
                   }
          
               }else{
-                  return response(['status' => 'fail','message'=>'The password is incorrect'],401);
+                  return response(['status' => 'fail','message'=>'La contraseña es incorrecta'],401);
          
               } 
         }

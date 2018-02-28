@@ -19,6 +19,7 @@ class CreateProjectTable extends Migration
             $table->string('email');
             $table->string('website',150);
             $table->string('address',255);
+            $table->string('image',80);
             $table->string('contact_phone',45);
             $table->string('contact_cellphone',45);
             $table->timestamps();
