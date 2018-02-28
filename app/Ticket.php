@@ -31,11 +31,11 @@ class Ticket extends Model
         return $this->hasOne('App\Category');
     }
     /**
-     * proiority relationship one to one
+     * proiority relationship one to one submitter 
      *
-     * @method user
+     * @method submitter
      */
-    public function user(){
+    public function submitter(){
         return $this->hasOne('App\User');
     }
     /**

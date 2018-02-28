@@ -6,7 +6,7 @@ use Intervention\Image\ImageManagerStatic as Image;
  
 trait Files {
 
-    /*upload single file*/
+    /*upload single file image*/
     function singleFileImage($path,$file,$sizeMediumWidth=400,$sizeMediumHeight=400,$sizeSmallWidth=100,$sizeSmallHeight=100){
         
         $filename = str_random(10).".".$file->getClientOriginalExtension();
@@ -28,7 +28,7 @@ trait Files {
         return $filename;
         
     }
-    
+    /*upload single file*/
     function singleFile($path,$file){
         $filename = str_random(5) .'-'. str_slug($file->getClientOriginalName(), '-') . '.' . $file->getClientOriginalExtension();
         $uploadPath = $path . "/";
