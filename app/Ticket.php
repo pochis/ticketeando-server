@@ -28,7 +28,15 @@ class Ticket extends Model
      * @method category
      */
     public function category(){
-        return $this->hasOne('App\Category');
+        return $this->hasOne('App\Category','id','category_id');
+    }
+    /**
+     * project relationship one to one
+     *
+     * @method project
+     */
+    public function project(){
+        return $this->hasOne('App\Project','id','project_id');
     }
     /**
      * proiority relationship one to one submitter 
@@ -36,8 +44,26 @@ class Ticket extends Model
      * @method submitter
      */
     public function submitter(){
-        return $this->hasOne('App\User');
+        return $this->hasOne('App\User','id','user_id');
     }
+    /**
+     * proiority relationship many to many submitter 
+     *
+     * @method owner
+     */
+    public function owner(){
+       return $this->belongsToMany('App\User', 'ticket_take',  'ticket_id','user_id');
+    }
+    
+    /**
+     * status relationship one to one submitter 
+     *
+     * @method status
+     */
+    public function status(){
+        return $this->hasOne('App\Type','id','current_status');
+    }
+    
     /**
      * proiority relationship one to many
      *

@@ -50,6 +50,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
          /*
           * tickets group paths
           */
+         $router->get('tickets/{user}[/{offset:[0-9]+?}/{limit:[0-9]+?}]','TicketController@getTickets');
          $router->post('ticket','TicketController@store');
             
     });
