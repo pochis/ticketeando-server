@@ -25,7 +25,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
          /*
           *user group paths
           */
-         $router->get('user/{id}',  'UserController@show');
+         $router->get('user/{id:[0-9]+}',  'UserController@show');
          $router->put('user/{id}',  'UserController@update');
          $router->put('user/password/update/{id}',  'UserController@changePassword');
          $router->post('user/image/upload',  'UserController@uploadImage');
@@ -50,6 +50,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
          /*
           * tickets group paths
           */
+         $router->get('ticket/{id:[0-9]+}',  'TicketController@show');
          $router->get('tickets/{user}[/{offset:[0-9]+?}/{limit:[0-9]+?}]','TicketController@getTickets');
          $router->post('ticket','TicketController@store');
             

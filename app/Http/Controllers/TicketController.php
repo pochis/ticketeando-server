@@ -35,6 +35,8 @@ class TicketController extends Controller
          /*search filter*/
          if($request->has('search')){
              $tickets->where('title','like', '%'.$request->search.'%')
+             ->orWhereRaw("DATE_FORMAT(created_at,'%Y/%m/%d') like ?", ["%$request->search%"])
+             ->orWhereRaw("DATE_FORMAT(updated_at,'%Y/%m/%d') like ?", ["%$request->search%"])
              ->orWhereHas('owner',function($q) use($request){
                  return $q->where('name', 'like', '%'.$request->search.'%');
              })->orWhereHas('category',function($q) use($request){
@@ -101,11 +103,20 @@ class TicketController extends Controller
                 }
               
             }
-             
             return response(['status'=>'success','message'=>'Ticket creado satisfactoriamente (TICK:'.$ticket->id.')'],200);
          }else{
             return response(['status'=>'fail','message'=>'Ah ocurrido un error al tratar de crear el ticket, vuelve a intentarlo mas tarde'],500);
          }
+         
+     }
+     /**
+     * show ticket data
+     *
+     * @method show
+     */
+     public function show($id){
+         
+         return response(['status' => 'success','ticket'=>Ticket::with('category','priority','submitter','project','status','owner','files')->find($id)],200); 
          
      }
     
