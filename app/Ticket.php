@@ -65,7 +65,7 @@ class Ticket extends Model
     }
     
     /**
-     * proiority relationship one to many
+     * files relationship one to many
      *
      * @method files
      */

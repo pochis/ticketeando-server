@@ -21,7 +21,7 @@ class GroupTypeTableSeeder extends Seeder
             'created_at' => new DateTime,
             'updated_at' => new DateTime,
         ]);
-         DB::table('group_type')->insert([
+        DB::table('group_type')->insert([
             'name' => 'Estados de ticket',
             'created_at' => new DateTime,
             'updated_at' => new DateTime,

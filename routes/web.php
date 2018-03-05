@@ -53,7 +53,11 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
          $router->get('ticket/{id:[0-9]+}',  'TicketController@show');
          $router->get('tickets/{user}[/{offset:[0-9]+?}/{limit:[0-9]+?}]','TicketController@getTickets');
          $router->post('ticket','TicketController@store');
-            
+         /*
+          * comments group paths
+          */
+         $router->get('comments/{ticket}[/{offset:[0-9]+?}/{limit:[0-9]+?}]','CommentController@getComments');
+         $router->post('comment','CommentController@store');
     });
    
 });

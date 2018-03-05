@@ -3,7 +3,9 @@
 use App\Ticket;
 use App\Type;
 use App\TicketFiles;
+use App\CommentFiles;
 use App\TicketHasStatus;
+use App\Comment;
 use App\Traits\Files;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -77,6 +79,7 @@ class TicketController extends Controller
           ]);
           
          $ticket = new Ticket();
+         $current_status =Type::where('group_type_id',3)->limit(1)->first();
          $ticket->title=$request->title;
          $ticket->subject=$request->subject;
          $ticket->description=$request->description;
@@ -84,21 +87,34 @@ class TicketController extends Controller
          $ticket->priority_id=$request->priority_id;
          $ticket->project_id=$request->project_id;
          $ticket->user_id=$request->user_id;
+         $ticket->current_status=$current_status->id;
          if($ticket->save()){
              
              TicketHasStatus::create([
                  'ticket_id'=>$ticket->id,
-                 'status_id'=> 7
+                 'status_id'=> $current_status->id
+             ]);
+             //create thread
+             $comment=Comment::create([
+                 'comment'=>$request->description,
+                 'ticket_id'=>$ticket->id,
+                 'user_id'=>$request->user_id
              ]);
             if($request->hasFile('attachment')){
                 $pathImage = base_path('public/static/ticket/'.$ticket->id);
+                $pathCommentImage = base_path('public/static/comment/'.$comment->id);
                 foreach($request->attachment as $file){
                     
                     $filename=$this->singleFileImage($pathImage, $file);
+                    $filenameComment=$this->singleFileImage($pathCommentImage, $file);
                     
                     TicketFiles::create([
                         'ticket_id'=>$ticket->id,
                         'file'=>$filename
+                    ]);
+                    CommentFiles::create([
+                        'comment_id'=>$comment->id,
+                        'file'=>$filenameComment
                     ]);
                 }
               

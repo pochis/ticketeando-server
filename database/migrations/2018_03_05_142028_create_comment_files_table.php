@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCommentTable extends Migration
+class CreateCommentFilesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateCommentTable extends Migration
      */
     public function up()
     {
-        Schema::create('comment', function (Blueprint $table) {
+        Schema::create('comment_files', function (Blueprint $table) {
             $table->increments('id');
-            $table->text('comment');
-            $table->integer('ticket_id');
-            $table->integer('user_id');
+            $table->string('file',80);
+            $table->integer('comment_id');
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ class CreateCommentTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('comment');
+        Schema::dropIfExists('comment_files');
     }
 }
