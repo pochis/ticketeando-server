@@ -25,9 +25,11 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
          /*
           *user group paths
           */
-         $router->get('user/{id:[0-9]+}',  'UserController@show');
+         $router->get('users[/{offset:[0-9]+?}/{limit:[0-9]+?}]','UserController@getUsers');
+         $router->get('user/{id:[0-9]+}','UserController@show');
          $router->put('user/{id}',  'UserController@update');
          $router->put('user/password/update/{id}',  'UserController@changePassword');
+         $router->post('user','UserController@store');
          $router->post('user/image/upload',  'UserController@uploadImage');
          /*
           * regions group paths
@@ -46,7 +48,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
          /*
           * project group paths
           */
-         $router->get('projects','ProjectController@getProjects');
+         $router->get('projects[/{offset:[0-9]+?}/{limit:[0-9]+?}]','ProjectController@getProjects');
          /*
           * tickets group paths
           */

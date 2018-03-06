@@ -22,6 +22,7 @@ class CreateProjectTable extends Migration
             $table->string('image',80);
             $table->string('contact_phone',45);
             $table->string('contact_cellphone',45);
+            $table->tinyInteger('status');
             $table->timestamps();
         });
     }
