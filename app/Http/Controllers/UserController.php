@@ -92,7 +92,7 @@ class UserController extends Controller
     /**
      * store user 
      *
-     * @method update
+     * @method store
      */
      public function store(Request $request){
          $this->validate($request, [

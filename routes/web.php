@@ -44,11 +44,18 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
          /*
           * categories group paths
           */
-         $router->get('categories','CategoryController@getCategories');
+         $router->get('categories[/{offset:[0-9]+?}/{limit:[0-9]+?}]','CategoryController@getCategories');
+         $router->get('category/{id:[0-9]+}','CategoryController@show');
+         $router->put('category/{id}',  'CategoryController@update');
+         $router->post('category','CategoryController@store');
          /*
           * project group paths
           */
          $router->get('projects[/{offset:[0-9]+?}/{limit:[0-9]+?}]','ProjectController@getProjects');
+         $router->get('project/{id:[0-9]+}','ProjectController@show');
+         $router->put('project/{id}',  'ProjectController@update');
+         $router->post('project','ProjectController@store');
+         $router->post('project/image/upload',  'ProjectController@uploadImage');
          /*
           * tickets group paths
           */
