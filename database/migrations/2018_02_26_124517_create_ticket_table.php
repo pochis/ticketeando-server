@@ -18,7 +18,8 @@ class CreateTicketTable extends Migration
             $table->string('title');
             $table->string('subject');
             $table->text('description');
-            $table->integer('current_status')->default(7);
+            $table->integer('current_status');
+            $table->integer('current_resolution');
             $table->integer('project_id');
             $table->integer('priority_id');
             $table->integer('category_id');

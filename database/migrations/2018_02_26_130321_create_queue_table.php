@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTicketTakeTable extends Migration
+class CreateQueueTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateTicketTakeTable extends Migration
      */
     public function up()
     {
-        Schema::create('ticket_take', function (Blueprint $table) {
+        Schema::create('queue', function (Blueprint $table) {
             $table->integer('user_id');
             $table->integer('ticket_id');
             $table->timestamps();
@@ -27,6 +27,6 @@ class CreateTicketTakeTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ticket_take');
+        Schema::dropIfExists('queue');
     }
 }

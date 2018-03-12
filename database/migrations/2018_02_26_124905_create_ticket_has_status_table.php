@@ -16,6 +16,8 @@ class CreateTicketHasStatusTable extends Migration
         Schema::create('ticket_has_status', function (Blueprint $table) {
             $table->integer('ticket_id');
             $table->integer('status_id');
+            $table->integer('resolution_id');
+            $table->integer('user_id');
             $table->timestamps();
         });
     }

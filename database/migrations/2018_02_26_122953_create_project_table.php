@@ -17,7 +17,7 @@ class CreateProjectTable extends Migration
             $table->increments('id');
             $table->string('name',100);
             $table->string('email');
-            $table->string('website',150);
+            $table->string('website',150)->nullable();
             $table->string('address',255);
             $table->string('image',80);
             $table->string('contact_phone',45);

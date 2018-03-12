@@ -47,7 +47,8 @@ class ProjectController extends Controller
      * @method show
      */
      public function show(Request $request,$id){
-        return response(['status' => 'success','project'=>Project::find($id)],200);
+        $project =Project::findOrFail($id);
+        return response(['status' => 'success','project'=>$project],200);
      } 
      /**
      * update project by id 
@@ -95,7 +96,7 @@ class ProjectController extends Controller
         $project = new Project();
         $project->name = $request->name;
         $project->email = strtolower(trim($request->email));
-        $project->website = $request->website;
+        $project->website = ($request->has('website'))? $request->website : null;
         $project->address = $request->address;
         $project->contact_phone = $request->contact_phone;
         $project->contact_cellphone = ($request->has('contact_cellphone')) ? $request->contact_cellphone : null;

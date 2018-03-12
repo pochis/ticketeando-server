@@ -51,18 +51,17 @@ class TypeTableSeeder extends Seeder
             'updated_at' => new DateTime,
         ]);
         DB::table('type')->insert([
-            'name' => 'Recibido',
-            'group_type_id' => 3,
-            'created_at' => new DateTime,
-            'updated_at' => new DateTime,
-        ]);
-        DB::table('type')->insert([
             'name' => 'En proceso',
             'group_type_id' => 3,
             'created_at' => new DateTime,
             'updated_at' => new DateTime,
         ]);
-        
+        DB::table('type')->insert([
+            'name' => 'Re abierto',
+            'group_type_id' => 3,
+            'created_at' => new DateTime,
+            'updated_at' => new DateTime,
+        ]);
         DB::table('type')->insert([
             'name' => 'Rechazado',
             'group_type_id' => 3,
@@ -75,7 +74,32 @@ class TypeTableSeeder extends Seeder
             'created_at' => new DateTime,
             'updated_at' => new DateTime,
         ]);
-       
+        /*Resoluciones de ticket*/
+        DB::table('type')->insert([
+            'name' => 'Sin resolver',
+            'group_type_id' => 4,
+            'created_at' => new DateTime,
+            'updated_at' => new DateTime,
+        ]);
+        DB::table('type')->insert([
+            'name' => 'Resuelto',
+            'group_type_id' => 4,
+            'created_at' => new DateTime,
+            'updated_at' => new DateTime,
+        ]);
+        DB::table('type')->insert([
+            'name' => 'No lo haré',
+            'group_type_id' => 4,
+            'created_at' => new DateTime,
+            'updated_at' => new DateTime,
+        ]);
+        DB::table('type')->insert([
+            'name' => 'Como fue diseñado',
+            'group_type_id' => 4,
+            'created_at' => new DateTime,
+            'updated_at' => new DateTime,
+        ]);
+
         
         
     }

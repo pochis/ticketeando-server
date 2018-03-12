@@ -48,7 +48,8 @@ class CategoryController extends Controller
      * @method show
      */
      public function show(Request $request,$id){
-        return response(['status' => 'success','category'=>Category::find($id)],200);
+        $category=Category::findOrFail($id);
+        return response(['status' => 'success','category'=>$category],200);
      } 
      /**
      * update category by id 

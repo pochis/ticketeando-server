@@ -2,11 +2,11 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-class TicketTake extends Model 
+class Queue extends Model 
 {
 
 
-    protected $table ='ticket_take';
+    protected $table ='queue';
     /**
      * The attributes that are mass assignable.
      *

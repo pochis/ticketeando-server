@@ -55,7 +55,8 @@ class UserController extends Controller
      * @method show
      */
     public function show(Request $request,$id){
-        return response(['status' => 'success','user'=>User::find($id)],200);
+        $user = User::findOrFail($id);
+        return response(['status' => 'success','user'=>$user],200);
     } 
     /**
      * update user by id 
@@ -119,6 +120,7 @@ class UserController extends Controller
         $user->cellphone = ($request->has('cellphone')) ? $request->cellphone : null;
         $user->birthday = ($request->has('birthday')) ? $request->birthday :null;
         $user->genre = $request->genre;
+        $user->role_id = $request->role_id;
         $user->country_id = $request->country_id;
         $user->state_id = ($request->has('state_id')) ? $request->state_id : 0;
         $user->city_id = ($request->has('city_id')) ? $request->city_id : 0;

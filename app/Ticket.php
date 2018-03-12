@@ -39,7 +39,7 @@ class Ticket extends Model
         return $this->hasOne('App\Project','id','project_id');
     }
     /**
-     * proiority relationship one to one submitter 
+     * relationship one to one submitter 
      *
      * @method submitter
      */
@@ -47,21 +47,29 @@ class Ticket extends Model
         return $this->hasOne('App\User','id','user_id');
     }
     /**
-     * proiority relationship many to many submitter 
+     * relationship many to many owner 
      *
      * @method owner
      */
     public function owner(){
-       return $this->belongsToMany('App\User', 'ticket_take',  'ticket_id','user_id');
+       return $this->belongsToMany('App\User', 'queue',  'ticket_id','user_id');
     }
     
     /**
-     * status relationship one to one submitter 
+     * relationship one to one status 
      *
      * @method status
      */
     public function status(){
         return $this->hasOne('App\Type','id','current_status');
+    }
+    /**
+     * relationship one to one resolution 
+     *
+     * @method resolution}
+     */
+    public function resolution(){
+        return $this->hasOne('App\Type','id','current_resolution');
     }
     
     /**

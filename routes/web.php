@@ -27,7 +27,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
           */
          $router->get('users[/{offset:[0-9]+?}/{limit:[0-9]+?}]','UserController@getUsers');
          $router->get('user/{id:[0-9]+}','UserController@show');
-         $router->put('user/{id}',  'UserController@update');
+         $router->put('user/{id:[0-9]+}',  'UserController@update');
          $router->put('user/password/update/{id}',  'UserController@changePassword');
          $router->post('user','UserController@store');
          $router->post('user/image/upload',  'UserController@uploadImage');
@@ -46,22 +46,24 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
           */
          $router->get('categories[/{offset:[0-9]+?}/{limit:[0-9]+?}]','CategoryController@getCategories');
          $router->get('category/{id:[0-9]+}','CategoryController@show');
-         $router->put('category/{id}',  'CategoryController@update');
+         $router->put('category/{id:[0-9]+}',  'CategoryController@update');
          $router->post('category','CategoryController@store');
          /*
           * project group paths
           */
          $router->get('projects[/{offset:[0-9]+?}/{limit:[0-9]+?}]','ProjectController@getProjects');
          $router->get('project/{id:[0-9]+}','ProjectController@show');
-         $router->put('project/{id}',  'ProjectController@update');
+         $router->put('project/{id:[0-9]+}',  'ProjectController@update');
          $router->post('project','ProjectController@store');
          $router->post('project/image/upload',  'ProjectController@uploadImage');
          /*
           * tickets group paths
           */
          $router->get('ticket/{id:[0-9]+}',  'TicketController@show');
-         $router->get('tickets/{user}[/{offset:[0-9]+?}/{limit:[0-9]+?}]','TicketController@getTickets');
+         $router->get('tickets[/{offset:[0-9]+?}/{limit:[0-9]+?}]','TicketController@getTickets');
+         $router->put('ticket/{id:[0-9]+}','TicketController@update');
          $router->post('ticket','TicketController@store');
+         $router->post('ticket/state','TicketController@state');
          /*
           * comments group paths
           */

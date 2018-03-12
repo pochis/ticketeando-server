@@ -26,5 +26,10 @@ class GroupTypeTableSeeder extends Seeder
             'created_at' => new DateTime,
             'updated_at' => new DateTime,
         ]);
+        DB::table('group_type')->insert([
+            'name' => 'Resoluciones de tickets',
+            'created_at' => new DateTime,
+            'updated_at' => new DateTime,
+        ]);
     }
 }
