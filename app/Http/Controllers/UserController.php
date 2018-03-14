@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
 use App\User;
+use App\UserHasProject;
 use App\Traits\Files;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -55,7 +56,7 @@ class UserController extends Controller
      * @method show
      */
     public function show(Request $request,$id){
-        $user = User::findOrFail($id);
+        $user = User::with('projects')->findOrFail($id);
         return response(['status' => 'success','user'=>$user],200);
     } 
     /**
@@ -79,11 +80,22 @@ class UserController extends Controller
         $user->cellphone = $request->cellphone;
         $user->birthday = $request->birthday;
         $user->genre = $request->genre;
+        $user->role_id = $request->role_id;
         $user->country_id = $request->country_id;
         $user->state_id = $request->state_id;
         $user->city_id = $request->city_id;
         $user->status = ($request->has('status')) ? $request->status :$user->status;
         if ($user->save()) {
+            //add project if has some
+            if($request->has('projects') && count($request->projects)){
+                UserHasProject::where('user_id',$user->id)->delete();
+                foreach($request->projects as $project){
+                    UserHasProject::updateOrCreate([
+                        'user_id'=>$user->id,
+                        'project_id'=>$project
+                    ]);
+                }
+            }
             return response(['status'=>'success','message'=>'Perfil actualizado'],200);
         } else {
             return response(['status'=>'fail','message'=>'Ha ocurrido un error al tratar de actualizar el usuario,vuelve a intentarlo mas tarde'],500);
@@ -132,11 +144,51 @@ class UserController extends Controller
                 $user->image =$filename;
                 $user->save();
             }
+            //add project if has some
+            if($request->has('projects')){
+                foreach($request->projects as $project){
+                    UserHasProject::updateOrCreate([
+                        'user_id'=>$user->id,
+                        'project_id'=>$project
+                    ]);
+                }
+            }
             return response(['status'=>'success','message'=>'Usuario creado satisfactorimanete!!'],200);
         } else {
             return response(['status'=>'fail','message'=>'Ha ocurrido un error al tratar de crear el usuario,vuelve a intentarlo mas tarde'],500);
         }
      }
+    /**
+     * user projects
+     *
+     * @method projects
+     */ 
+     public function projects(Request $request,$id,$offset=0,$limit=10){
+         
+       $user= User::where('id',$id)->first();
+       $projects = $user->projects()->offset($offset)->limit($limit);
+        
+        /*search filter*/
+         if($request->has('search')){
+             
+             $projects->where('name', 'like', '%'.$request->search.'%')
+                 ->orWhere('email','like','%'.$request->search.'%')
+                 ->orWhere('website','like','%'.$request->search.'%')
+                 ->orWhere('address','like','%'.$request->search.'%')
+                 ->orWhere('contact_phone','like','%'.$request->search.'%')
+                 ->orWhere('contact_cellphone','like','%'.$request->search.'%')
+                 ->orWhereRaw("DATE_FORMAT(created_at,'%Y/%m/%d') like ?", ["%$request->search%"])
+                 ->orWhereRaw("DATE_FORMAT(updated_at,'%Y/%m/%d') like ?", ["%$request->search%"]);
+         }
+        
+        return response([
+            'status' => 'success',
+            'total'=>$user->projects()->count(),
+            'projects'=>$projects->get() 
+        ],200);
+     }
+     
+     
     /**
      * upload user image
      *
@@ -190,6 +242,28 @@ class UserController extends Controller
             return response(['status' => 'success', "message" => "Contraseña actualizada"], 200);
         }
      }
-
-
+    /**
+     * total users
+     *
+     * @method total
+     */
+     public function total(){
+         return response(['status' => 'success', "total" => User::count()], 200);
+     }
+    /**
+     * total users projects
+     *
+     * @method totalRelations
+     */
+     public function totalRelations ($id,$relation){
+         $user= User::findOrFail($id);
+         $total=0;
+         if($relation=='projects'){
+             $total=$user->projects()->count();
+         }else if($relation=='tickets'){
+             $total =$user->tickets()->count();
+         }
+         return response(['status' => 'success', "total" => $total], 200);
+     }
+    
 }

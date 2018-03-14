@@ -211,5 +211,14 @@ class TicketController extends Controller
           }
           
      }
+     /**
+     * total tickets
+     *
+     * @method total
+     */
+     public function total(){
+         return response(['status' => 'success', "total" => Ticket::count()], 200);
+     }
+     
     
 }

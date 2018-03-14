@@ -28,8 +28,28 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     protected $hidden = [
         'password',
     ];
-    
+    /**
+     * Role for user.
+     *
+     * @method role
+     */
     public function role(){
         return $this->hasOne('App\Type', 'id', 'role_id');
+    }
+    /**
+     * Role for user.
+     *
+     * @method role
+     */
+    public function projects(){
+        return $this->belongsToMany('App\Project','user_has_project');
+    }
+    /**
+     * user tickets.
+     *
+     * @method tickets
+     */
+    public function tickets(){
+        return $this->hasMany('App\Ticket','user_id','id');
     }
 }

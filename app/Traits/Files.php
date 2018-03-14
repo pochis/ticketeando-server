@@ -22,7 +22,7 @@ trait Files {
         if(!File::exists($uploadSmallPath)) {
             File::makeDirectory($uploadSmallPath, 0775, true, true);
         }
-        $small=Image::make(File::get($file))->save($uploadPath. $filename);
+        $small=Image::make(File::get($file))->resize(520, 440)->save($uploadPath. $filename);
         $medium=Image::make(File::get($file))->fit($sizeMediumWidth, $sizeMediumHeight)->save($uploadMediumPath. $filename);
         $small=Image::make(File::get($file))->fit($sizeSmallWidth, $sizeSmallHeight)->save($uploadSmallPath. $filename);
         return $filename;

@@ -142,5 +142,13 @@ class ProjectController extends Controller
         }
         
     }
+    /**
+     * total projects
+     *
+     * @method total
+     */
+     public function total(){
+         return response(['status' => 'success', "total" => Project::count()], 200);
+     }
     
 }
