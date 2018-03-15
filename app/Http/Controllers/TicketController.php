@@ -216,8 +216,12 @@ class TicketController extends Controller
      *
      * @method total
      */
-     public function total(){
-         return response(['status' => 'success', "total" => Ticket::count()], 200);
+     public function total(Request $request){
+         $total=Ticket::count();
+         if($request->has('ticket_status')){
+             $total =Ticket::where('current_status',$request->ticket_status)->count();
+         }
+         return response(['status' => 'success', "total" => $total], 200);
      }
      
     

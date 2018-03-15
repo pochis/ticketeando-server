@@ -76,14 +76,14 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $user->name = $request->name;
         $user->lastname = $request->lastname;
-        $user->phone = $request->phone;
-        $user->cellphone = $request->cellphone;
-        $user->birthday = $request->birthday;
-        $user->genre = $request->genre;
+        $user->phone = ($request->has('phone')) ? $request->phone : null;
+        $user->cellphone = ($request->has('cellphone')) ? $request->cellphone : null;
+        $user->birthday = ($request->has('birthday')) ? $request->birthday : null;
+        $user->genre = ($request->has('genre') && !is_null($request->genre)) ? $request->genre : $user->genre;
         $user->role_id = $request->role_id;
         $user->country_id = $request->country_id;
-        $user->state_id = $request->state_id;
-        $user->city_id = $request->city_id;
+        $user->state_id = ($request->has('state_id') && !is_null($request->state_id)) ? $request->state_id : 0;
+        $user->city_id = ($request->has('city_id') && !is_null($request->city_id)) ? $request->city_id : 0;
         $user->status = ($request->has('status')) ? $request->status :$user->status;
         if ($user->save()) {
             //add project if has some
@@ -128,15 +128,15 @@ class UserController extends Controller
         $user->lastname = $request->lastname;
         $user->email = strtolower(trim($request->email));
         $user->password = app('hash')->make($request->password);
-        $user->phone = ($request->has('phone'))? $request->phone :null;
+        $user->phone = ($request->has('phone')) ? $request->phone : null;
         $user->cellphone = ($request->has('cellphone')) ? $request->cellphone : null;
-        $user->birthday = ($request->has('birthday')) ? $request->birthday :null;
-        $user->genre = $request->genre;
+        $user->birthday = ($request->has('birthday')) ? $request->birthday : null;
+        $user->genre = ($request->has('genre') && !is_null($request->genre)) ? $request->genre : 1;
         $user->role_id = $request->role_id;
         $user->country_id = $request->country_id;
-        $user->state_id = ($request->has('state_id')) ? $request->state_id : 0;
-        $user->city_id = ($request->has('city_id')) ? $request->city_id : 0;
-        $user->status = ($request->has('status')) ? $request->status : 0;
+        $user->state_id = ($request->has('state_id') && !is_null($request->state_id)) ? $request->state_id : 0;
+        $user->city_id = ($request->has('city_id') && !is_null($request->city_id)) ? $request->city_id : 0;
+        $user->status = ($request->has('status') && !is_null($request->status)) ? $request->status : 0;
         if ($user->save()) {
             if($request->hasFile('image')){
                 $path = base_path('public/static/user/'.$user->id);
@@ -188,6 +188,69 @@ class UserController extends Controller
         ],200);
      }
      
+     /**
+     * destroy user
+     *
+     * @method destroy
+     */
+     public function destroy($id){
+        $user = User::findOrFail($id);
+        $userTickets=\App\Ticket::where('user_id',$user->id)->get();
+        $userComment=\App\Comment::where('user_id',$user->id)->get();
+        /*delete user image*/
+        if($user->image){
+            $path = base_path('public/static/user/'.$user->id);
+            File::deleteDirectory($path);
+        }
+        /*delete ticket images*/
+        if($userTickets){
+            foreach($userTickets as $ticket){
+                if($ticket->files()->count()){
+                    File::deleteDirectory(base_path('public/static/ticket/'.$ticket->id));
+                }
+                //delition
+                \App\TicketFiles::where('ticket_id',$ticket->id)->delete();
+                \App\TicketHasStatus::where('ticket_id',$ticket->id)->delete();
+                \App\Queue::where('ticket_id',$ticket->id)->delete();
+            }
+        }
+        /*delete comment images*/
+        if($userComment){
+            foreach($userComment as $comment){
+                if($comment->files()->count()){
+                    File::deleteDirectory(base_path('public/static/comment/'.$comment->id));
+                }
+                //delition
+                \App\CommentFiles::where('comment_id',$comment->id)->delete();
+            }
+        }
+        /*delete tickets taken*/
+        if($user->role_id==1){
+            $queue =\App\Queue::where('user_id',$user->id)->get();
+            $current_status =\App\Type::where('group_type_id',3)->limit(1)->first();
+            $current_resolution =\App\Type::where('group_type_id',4)->limit(1)->first();
+            foreach($queue as $ticket){
+                 \App\TicketHasStatus::create([
+                     'ticket_id'=>$ticket->ticket_id,
+                     'status_id'=> $current_status->id,
+                     'resolution_id'=> $current_resolution->id,
+                     'user_id'=> $user->id,
+                  ]);
+                  \App\Ticket::where('id',$ticket->ticket_id)->update(['current_status'=>$current_status->id,'current_resolution'=>$current_resolution->id]);
+                  \App\Queue::where('user_id',$user->id)->delete();
+            }
+            
+        }
+        UserHasProject::where('user_id',$user->id)->delete();
+        \App\Comment::where('user_id',$user->id)->delete();
+        \App\Ticket::where('user_id',$user->id)->delete();
+        
+        if($user->delete()){
+            return response(['status'=>'success','message'=>'Usario eliminado correctamente!!'],200);
+        }else{
+            return response(['status'=>'fail','message'=>'Ha ocurrido un error al tratar de eliminar el usuario, vuelve a intentarlo mas tarde'],500);
+        }
+     } 
      
     /**
      * upload user image
@@ -255,13 +318,19 @@ class UserController extends Controller
      *
      * @method totalRelations
      */
-     public function totalRelations ($id,$relation){
+     public function totalRelations (Request $request,$id,$relation){
          $user= User::findOrFail($id);
          $total=0;
          if($relation=='projects'){
              $total=$user->projects()->count();
-         }else if($relation=='tickets'){
+             if($request->has('project_status')){
+                 $total=$user->projects()->where('status',$request->project_status)->count();
+             }
+         }elseif($relation=='tickets'){
              $total =$user->tickets()->count();
+             if($request->has('ticket_status')){
+                $total= $user->tickets()->where('current_status',$request->ticket_status)->count(); 
+             }
          }
          return response(['status' => 'success', "total" => $total], 200);
      }

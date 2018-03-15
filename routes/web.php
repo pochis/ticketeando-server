@@ -34,6 +34,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
          $router->put('user/password/update/{id}','UserController@changePassword');
          $router->post('user','UserController@store');
          $router->post('user/image/upload',  'UserController@uploadImage');
+         $router->delete('user/{id:[0-9]+}',  'UserController@destroy');
          /*
           * regions group paths
           */
