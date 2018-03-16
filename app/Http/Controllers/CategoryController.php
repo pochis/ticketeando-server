@@ -91,4 +91,27 @@ class CategoryController extends Controller
             return response(['status'=>'fail','message'=>'Ha ocurrido un error al tratar de crear la categoria, vuelve a intentarlo mas tarde'],500);
         }
      }
+     /**
+     * destroy category
+     *
+     * @method destroy
+     */
+     public function destroy($id){
+        $category = Category::findOrFail($id);
+        
+        $categoryIntickets =\App\Ticket::where('category_id',$category->id)->get();
+        
+        if($categoryIntickets->count()){
+            return response(['status'=>'fail','message'=>'La categoria no puede ser eliminada porque tiene relacion con tickets'],500);
+        }
+        
+        Category::where('parent',$category->id)->update(['parent'=>0]);
+        if($category->delete()){
+            
+            return response(['status'=>'success','message'=>'Categoria eliminada correctamente!!'],200);
+        }else{
+            return response(['status'=>'fail','message'=>'Ha ocurrido un error al tratar de eliminar la categoria, vuelve a intentarlo mas tarde'],500);
+        }
+        
+     }
 }

@@ -118,7 +118,6 @@ class UserController extends Controller
             'cellphone' => 'nullable|numeric',
             'birthday' => 'nullable|date_format:"Y-m-d"',
             'country_id' => 'required',
-            'status' => 'required',
         ],[
             'email.unique'=>'El correo electronico ya ha sido tomado'
         ]);
@@ -246,7 +245,7 @@ class UserController extends Controller
         \App\Ticket::where('user_id',$user->id)->delete();
         
         if($user->delete()){
-            return response(['status'=>'success','message'=>'Usario eliminado correctamente!!'],200);
+            return response(['status'=>'success','message'=>'Usuario eliminado correctamente!!'],200);
         }else{
             return response(['status'=>'fail','message'=>'Ha ocurrido un error al tratar de eliminar el usuario, vuelve a intentarlo mas tarde'],500);
         }

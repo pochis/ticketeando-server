@@ -60,7 +60,6 @@ class ProjectController extends Controller
             'name' => 'required',
             'address' => 'required',
             'contact_phone' => 'required|numeric',
-            'status' => 'required',
         ]);
         $project = Project::findOrFail($id);
         $project->name = $request->name;
@@ -68,7 +67,7 @@ class ProjectController extends Controller
         $project->website = $request->website;
         $project->contact_phone = $request->contact_phone;
         $project->contact_cellphone = ($request->has('contact_cellphone')) ? $request->contact_cellphone : null;
-        $project->status = ($request->has('status')) ? $request->status : 0;
+        $project->status = ($request->has('status') && !is_null($request->status)) ? $request->status : 0;
         if ($project->save()) {
             
             return response(['status'=>'success','message'=>'Proyecto actualizado!!'],200);
@@ -88,7 +87,6 @@ class ProjectController extends Controller
             'email' => 'required|email|unique:project',
             'address' => 'required',
             'contact_phone' => 'required|numeric',
-            'status' => 'required',
         ],[
             'email.unique'=>'El correo electronico ya ha sido tomado'
         ]);
@@ -100,7 +98,7 @@ class ProjectController extends Controller
         $project->address = $request->address;
         $project->contact_phone = $request->contact_phone;
         $project->contact_cellphone = ($request->has('contact_cellphone')) ? $request->contact_cellphone : null;
-        $project->status = ($request->has('status')) ? $request->status : 0;
+        $project->status = ($request->has('status') && !is_null($request->status)) ? $request->status : 0;
         if ($project->save()) {
             
             if($request->hasFile('image')){
@@ -113,6 +111,34 @@ class ProjectController extends Controller
         } else {
             return response(['status'=>'fail','message'=>'Ha ocurrido un error al tratar de crear el proyecto, vuelve a intentarlo mas tarde'],500);
         }
+     }
+     /**
+     * destroy project
+     *
+     * @method destroy
+     */
+     public function destroy($id){
+        $project = Project::findOrFail($id);
+        
+        $projectIntickets =\App\Ticket::where('project_id',$project->id)->get();
+        
+        if($projectIntickets->count()){
+            return response(['status'=>'fail','message'=>'El proyecto no puede ser eliminado porque tiene relacion con tickets'],500);
+        }
+        /*delete project image*/
+        if($project->image){
+            $path = base_path('public/static/project/'.$project->id);
+            File::deleteDirectory($path);
+        }
+        /*delete user projects*/
+        \App\UserHasProject::where('project_id',$project->id)->delete();
+        
+        if($project->delete()){
+            return response(['status'=>'success','message'=>'Proyecto eliminado correctamente!!'],200);
+        }else{
+            return response(['status'=>'fail','message'=>'Ha ocurrido un error al tratar de eliminar el proyecto, vuelve a intentarlo mas tarde'],500);
+        }
+        
      }
      /**
      * upload project image

@@ -52,6 +52,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
          $router->get('category/{id:[0-9]+}','CategoryController@show');
          $router->put('category/{id:[0-9]+}',  'CategoryController@update');
          $router->post('category','CategoryController@store');
+         $router->delete('category/{id:[0-9]+}','CategoryController@destroy');
          /*
           * project group paths
           */
@@ -61,6 +62,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
          $router->put('project/{id:[0-9]+}',  'ProjectController@update');
          $router->post('project','ProjectController@store');
          $router->post('project/image/upload',  'ProjectController@uploadImage');
+         $router->delete('project/{id:[0-9]+}',  'ProjectController@destroy');
          /*
           * tickets group paths
           */
