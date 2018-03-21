@@ -77,6 +77,15 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
           */
          $router->get('comments/{ticket}[/{offset:[0-9]+?}/{limit:[0-9]+?}]','CommentController@getComments');
          $router->post('comment','CommentController@store');
+         /*
+          * APIs group paths
+          */
+         $router->get('api/list[/{offset:[0-9]+?}/{limit:[0-9]+?}]','ApiController@getApiList');
+         $router->get('api/{id:[0-9]+}','ApiController@show');
+         $router->get('api/generate/key','ApiController@generateKey');
+         $router->put('api/{id:[0-9]+}',  'ApiController@update');
+         $router->post('api','ApiController@store');
+         $router->delete('api/{id:[0-9]+}','ApiController@destroy');
     });
    
 });

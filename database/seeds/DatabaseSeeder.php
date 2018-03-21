@@ -17,5 +17,6 @@ class DatabaseSeeder extends Seeder
         $this->call('StateTableSeeder');
         $this->call('GroupTypeTableSeeder');
         $this->call('TypeTableSeeder');
+        $this->call('ApiTableSeeder');
     }
 }
