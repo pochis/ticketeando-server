@@ -8,13 +8,14 @@ use App\TicketHasStatus;
 use App\Queue;
 use App\Comment;
 use App\Traits\Files;
+use App\Traits\MailNotification;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class TicketController extends Controller
 {
     
-    use Files;
+    use Files,MailNotification;
     
     /**
      * get tickets
@@ -155,6 +156,16 @@ class TicketController extends Controller
                 }
               
             }
+            $newTickets =Ticket::find($ticket->id);
+            /*notificate to user*/
+            $this->notfication([
+              "title"=>"Creación de ticket (".$newTickets->title.") satisfactoriamente",
+              "emails"=>[$newTickets->submitter->email],
+              "body"=>"Has creado una nueva solicitud de ticket, puedes verlo en el siguiente link.",
+              "subject"=>"Nueva solicitud de ticket (".$newTickets->subject.")",
+              "name" => $newTickets->submitter->name.' '.$newTickets->submitter->lastname,
+              "link"=>url('tickets/show/'.$ticket->id)
+            ]);
             return response(['status'=>'success','message'=>'Ticket creado satisfactoriamente (TICK:'.$ticket->id.')'],200);
          }else{
             return response(['status'=>'fail','message'=>'Ah ocurrido un error al tratar de crear el ticket, vuelve a intentarlo mas tarde'],500);
@@ -205,7 +216,22 @@ class TicketController extends Controller
                  'resolution_id'=> $request->resolution_id,
                  'user_id'=> $request->user_id,
               ]);
-              return response(['status'=>'success','message'=>'Ticket actualizado','ticket'=>$relations->find($ticket->id)],200);
+              
+              /*notificate to user*/
+              $updatedTicket =$relations->find($ticket->id);
+              $body =($updatedTicket->owner()->count()) 
+                     ? "El ticket esta sindo atendido por ".$updatedTicket->owner[0]->name.' '.$updatedTicket->owner[0]->lastname." puedes hacerle segimiento en el siguiente link" 
+                     : "El ticket queda diponible para ser revisado pronto por nuestros asistentes";
+              $body.="<br>Resolución (".$updatedTicket->resolution->name.")";
+              $this->notfication([
+                    "title"     => "El ticket ".$updatedTicket->title." ha cambiado de estado",
+                    "body"      => $body,
+                    "emails"    => [$updatedTicket->submitter->email],
+                    "subject"   => "Estado: ".$updatedTicket->status->name,
+                    "name"      => $updatedTicket->submitter->name.' '.$updatedTicket->submitter->lastname,
+                    "link"      => url('tickets/show/'.$ticket->id)
+                  ]);
+              return response(['status'=>'success','message'=>'Ticket actualizado','ticket'=>$updatedTicket],200);
           }else{
               return response(['status'=>'fail','message'=>'Ah ocurrido un error al tratar de cambiar el estado del ticket, vuelve a intentarlo mas tarde'],500);
           }
