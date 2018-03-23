@@ -15,45 +15,39 @@ class AuthController extends Controller
             'email' => 'required|email',
             'password' => 'required'
         ]);
- 
         $user = User::with('role')->where('email', $request->email)->first();
-        
-        if($user){
-            if(Hash::check($request->password, $user->password)){
+        if ($user) {
+            if (Hash::check($request->password, $user->password)){
+               $ip_client=  getConnectedUserIp();
+               $apitoken = base64_encode(str_random(40).'~'.$ip_client);
+               $user->api_token =$apitoken;
                   
-                  
-                  $ip_client=  getConnectedUserIp();
-                  $apitoken = base64_encode(str_random(40).'~'.$ip_client);
-                  $user->api_token =$apitoken;
-                  
-                  if($user->save()){
-                      return response(['status' => 'success','token' => $apitoken,'user'=>$user],200);
-                  }else{
-                      return response(['status'=>'fail','message'=>'An error occurred when trying to create the token'],401);
-                  }
-         
-              }else{
-                  return response(['status' => 'fail','message'=>'La contraseña es incorrecta'],401);
-         
-              } 
+               if ($user->save()) {
+                  return response(['status' => 'success','token' => $apitoken,'user'=>$user],200);
+               }else {
+                  return response(['status'=>'fail','message'=>'Ah ocurrido un error al tratar de crear el token, vuelve a intentarlo mas tarde'],401);
+               }
+            }else {
+              return response(['status' => 'fail','message'=>'La contraseña es incorrecta'],401);
+            } 
         }
-             return response(['status' => 'fail','message'=>'An error occurred, please try later'],500);
+        return response(['status' => 'fail','message'=>'Ah ocurrido un error insesperado, vuelve a intentarlo mas tarde'],500);
          
     }
     public function logout(Request $request){
         $this->validate($request, [
-            'userId' => 'required|numeric',
+            'user' => 'required|numeric',
         ]);
-        $user = User::find($request->userId);
-        if($user){
-            $user->api_token=null;
-            if($user->save()){
-                return response(['status' => 'success'],200);
-            }else{
-                return response(['status' => 'fail','message'=>"An error ocurred,can't remove token form user"],401);
+        $user = User::findOrFail($request->user);
+        if ($user) {
+           $user->api_token=null;
+           if ($user->save()) {
+              return response(['status' => 'success'],200);
+            } else {
+              return response(['status' => 'fail','message'=>"Ah ocurrido un error al tratar de borrar el token, vuelve a intentarlo mas tarde"],401);
             }
         }
-        return response(['status' => 'fail','message'=>'An error occurred, please try later'],500);
+        return response(['status' => 'fail','message'=>'Ah ocurrido un error insesperado, vuelve a intentarlo mas tarde'],500);
     }
     
  

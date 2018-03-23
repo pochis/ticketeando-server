@@ -19,11 +19,14 @@ class ProjectController extends Controller
          $projects= Project::offset($offset)->limit($limit);
          
          /*sorting  by*/
-         if($request->has('sortBy') && $request->has('sortType')){
+         if ($request->has('sortBy') && $request->has('sortType')){
              $projects->orderBy($request->sortBy,$request->sortType);
          }
+         if ($request->has('status')) {
+             $projects->where('status',$request->status);
+         }
          /*search filter*/
-         if($request->has('search')){
+         if ($request->has('search')) {
              $projects->where('name','like', '%'.$request->search.'%')
              ->orWhere('email','like','%'.$request->search.'%')
              ->orWhere('website','like','%'.$request->search.'%')
@@ -32,13 +35,11 @@ class ProjectController extends Controller
              ->orWhere('contact_cellphone','like','%'.$request->search.'%')
              ->orWhereRaw("DATE_FORMAT(created_at,'%Y/%m/%d') like ?", ["%$request->search%"])
              ->orWhereRaw("DATE_FORMAT(updated_at,'%Y/%m/%d') like ?", ["%$request->search%"]);
-             
          }
-         
          return response([
            'status'=>'success',
            'projects'=>$projects->get(),
-           'total'=>Project::count()
+           'total'=>$projects->count()
          ],200);
      }
      /**

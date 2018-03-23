@@ -1,13 +1,15 @@
 <?php namespace App\Http\Controllers;
 
-use App\Ticket;
+use App\Api;
 use App\Type;
+use App\Queue;
+use App\Ticket;
+use App\Comment;
 use App\TicketFiles;
 use App\CommentFiles;
-use App\TicketHasStatus;
-use App\Queue;
-use App\Comment;
 use App\Traits\Files;
+use App\Notification;
+use App\TicketHasStatus;
 use App\Traits\MailNotification;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -157,14 +159,20 @@ class TicketController extends Controller
               
             }
             $newTickets =Ticket::find($ticket->id);
+            $apiSettings = Api::where('secret',$request->header('api-key'))->first();
             /*notificate to user*/
             $this->notfication([
-              "title"=>"Creación de ticket (".$newTickets->title.") satisfactoriamente",
-              "emails"=>[$newTickets->submitter->email],
-              "body"=>"Has creado una nueva solicitud de ticket, puedes verlo en el siguiente link.",
-              "subject"=>"Nueva solicitud de ticket (".$newTickets->subject.")",
-              "name" => $newTickets->submitter->name.' '.$newTickets->submitter->lastname,
-              "link"=>url('tickets/show/'.$ticket->id)
+              "title"   =>"Creación de ticket (".$newTickets->title.") satisfactoriamente",
+              "emails"  =>[$newTickets->submitter->email],
+              "body"    =>"Has creado una nueva solicitud de ticket, puedes verlo en el siguiente link.",
+              "subject" =>"Nueva solicitud de ticket (".$newTickets->subject.")",
+              "name"    => $newTickets->submitter->name.' '.$newTickets->submitter->lastname,
+              "link"    => $apiSettings->domain.'/tickets/show/'.$ticket->id
+            ]);
+            Notification::create([
+                "subject"   =>"Creación de ticket (".$newTickets->title.") satisfactoriamente",
+                "user_id"   =>$newTickets->submitter->id,
+                "ticket_id" =>$ticket->id
             ]);
             return response(['status'=>'success','message'=>'Ticket creado satisfactoriamente (TICK:'.$ticket->id.')'],200);
          }else{
@@ -219,6 +227,7 @@ class TicketController extends Controller
               
               /*notificate to user*/
               $updatedTicket =$relations->find($ticket->id);
+              $apiSettings = Api::where('secret',$request->header('api-key'))->first();
               $body =($updatedTicket->owner()->count()) 
                      ? "El ticket esta sindo atendido por ".$updatedTicket->owner[0]->name.' '.$updatedTicket->owner[0]->lastname." puedes hacerle segimiento en el siguiente link" 
                      : "El ticket queda diponible para ser revisado pronto por nuestros asistentes";
@@ -229,8 +238,13 @@ class TicketController extends Controller
                     "emails"    => [$updatedTicket->submitter->email],
                     "subject"   => "Estado: ".$updatedTicket->status->name,
                     "name"      => $updatedTicket->submitter->name.' '.$updatedTicket->submitter->lastname,
-                    "link"      => url('tickets/show/'.$ticket->id)
-                  ]);
+                    "link"      => $apiSettings->domain.'/tickets/show/'.$ticket->id
+              ]);
+              Notification::create([
+                "subject"   =>"El ticket ".$updatedTicket->title." ha cambiado de estado",
+                "user_id"   =>$updatedTicket->submitter->id,
+                "ticket_id" =>$ticket->id
+              ]);
               return response(['status'=>'success','message'=>'Ticket actualizado','ticket'=>$updatedTicket],200);
           }else{
               return response(['status'=>'fail','message'=>'Ah ocurrido un error al tratar de cambiar el estado del ticket, vuelve a intentarlo mas tarde'],500);

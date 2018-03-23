@@ -167,6 +167,9 @@ class UserController extends Controller
        $user= User::where('id',$id)->first();
        $projects = $user->projects()->offset($offset)->limit($limit);
         
+        if ($request->has('status')) {
+             $projects->where('status',$request->status);
+        }
         /*search filter*/
          if($request->has('search')){
              
@@ -182,7 +185,7 @@ class UserController extends Controller
         
         return response([
             'status' => 'success',
-            'total'=>$user->projects()->count(),
+            'total'=>$projects->count(),
             'projects'=>$projects->get() 
         ],200);
      }
