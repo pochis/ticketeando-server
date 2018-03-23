@@ -61,6 +61,7 @@ class CommentController extends Controller
               "title"   =>"Nuevo comentario en el ticket (".$updatedTicket->title.")",
               "emails"  =>[$updatedTicket->submitter->email],
               "body"    =>"Notificacion de comentario, puedes verlo en el siguiente link.",
+              "comment" => $request->comment,
               "subject" =>"Nuevo comentario sobre el ticket (".$updatedTicket->subject.")",
               "name"    => $updatedTicket->submitter->name.' '.$updatedTicket->submitter->lastname,
               "link"    => $apiSettings->domain.'/tickets/show/'.$request->ticket_id

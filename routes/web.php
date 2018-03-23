@@ -86,6 +86,13 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
          $router->put('api/{id:[0-9]+}',  'ApiController@update');
          $router->post('api','ApiController@store');
          $router->delete('api/{id:[0-9]+}','ApiController@destroy');
+         /*
+          * Notifications group paths
+          */
+         $router->get('notifications[/{offset:[0-9]+?}/{limit:[0-9]+?}]','NotificationController@getNotifications');
+         $router->get('notification/{id:[0-9]+}','NotificationController@show');
+         $router->put('notification/{id:[0-9]+}',  'NotificationController@update');
+         $router->delete('notification/{id:[0-9]+}','NotificationController@destroy');
     });
    
 });
