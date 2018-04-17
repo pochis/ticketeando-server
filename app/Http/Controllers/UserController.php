@@ -21,7 +21,7 @@ class UserController extends Controller
      public function getUsers(Request $request,$offset=0,$limit=10){
          
          $users= User::with('role')->offset($offset)->limit($limit);
-         
+         $total =User::count();
          /*sorting  by*/
          if($request->has('sortBy') && $request->has('sortType')){
             if($request->sortBy=='role'){
@@ -42,12 +42,20 @@ class UserController extends Controller
              ->orWhereHas('role',function($q) use($request){
                  return $q->where('name', 'like', '%'.$request->search.'%');
              });
+             $total =User::where('name','like', '%'.$request->search.'%')
+             ->orWhere('lastname','like','%'.$request->search.'%')
+             ->orWhere('email','like','%'.$request->search.'%')
+             ->orWhereRaw("DATE_FORMAT(created_at,'%Y/%m/%d') like ?", ["%$request->search%"])
+             ->orWhereRaw("DATE_FORMAT(updated_at,'%Y/%m/%d') like ?", ["%$request->search%"])
+             ->orWhereHas('role',function($q) use($request){
+                 return $q->where('name', 'like', '%'.$request->search.'%');
+             })->count();
          }
          
          return response([
            'status'=>'success',
            'users'=>$users->get(),
-           'total'=>User::count()
+           'total'=>$total
          ],200);
      }
     /**

@@ -27,12 +27,14 @@ class TicketController extends Controller
      public function getTickets(Request $request,$offset=0,$limit=10){
          
          $tickets = Ticket::with('category','priority','submitter','project','status','owner')->offset($offset)->limit($limit);
-         
+         $total =Ticket::count();
          if($request->has('user')){
             $tickets->where('user_id',$request->user);
+            $total =Ticket::where('user_id',$request->user)->count();
          }
          if($request->has('status')){
              $tickets->where('current_status',$request->status);
+             $total =Ticket::where('current_status',$request->status)->count();
          }
          
          /*sorting  by*/
@@ -63,12 +65,28 @@ class TicketController extends Controller
              })->orWhereHas('status',function($q) use($request){
                  return $q->where('name', 'like', '%'.$request->search.'%');
              });
+             $total =Ticket::where('title','like', '%'.$request->search.'%')
+             ->orWhereRaw("DATE_FORMAT(created_at,'%Y/%m/%d') like ?", ["%$request->search%"])
+             ->orWhereRaw("DATE_FORMAT(updated_at,'%Y/%m/%d') like ?", ["%$request->search%"])
+             ->orWhereHas('owner',function($q) use($request){
+                 return $q->where('name', 'like', '%'.$request->search.'%');
+             })->orWhereHas('category',function($q) use($request){
+                 return $q->where('name', 'like', '%'.$request->search.'%');
+             })->orWhereHas('priority',function($q) use($request){
+                 return $q->where('name', 'like', '%'.$request->search.'%');
+             })->orWhereHas('submitter',function($q) use($request){
+                 return $q->where('name', 'like', '%'.$request->search.'%');
+             })->orWhereHas('project',function($q) use($request){
+                 return $q->where('name', 'like', '%'.$request->search.'%');
+             })->orWhereHas('status',function($q) use($request){
+                 return $q->where('name', 'like', '%'.$request->search.'%');
+             })->count();
          }
          
          return response([
            'status'=>'success',
            'tickets'=>$tickets->get(),
-           'total'=>Ticket::count()
+           'total'=>$total
          ],200);
      }
     /**

@@ -14,7 +14,7 @@ class ApiController extends Controller
     public function getApiList(Request $request,$offset=0,$limit=10){
          
          $apis= Api::offset($offset)->limit($limit);
-         
+         $total =Api::count();
          /*sorting  by*/
          if($request->has('sortBy') && $request->has('sortType')){
              $apis->orderBy($request->sortBy,$request->sortType);
@@ -26,13 +26,17 @@ class ApiController extends Controller
              ->orWhere('email','like','%'.$request->search.'%')
              ->orWhereRaw("DATE_FORMAT(created_at,'%Y/%m/%d') like ?", ["%$request->search%"])
              ->orWhereRaw("DATE_FORMAT(updated_at,'%Y/%m/%d') like ?", ["%$request->search%"]);
-             
+              $total =Api::where('secret','like', '%'.$request->search.'%')
+             ->orWhere('domain','like','%'.$request->search.'%')
+             ->orWhere('email','like','%'.$request->search.'%')
+             ->orWhereRaw("DATE_FORMAT(created_at,'%Y/%m/%d') like ?", ["%$request->search%"])
+             ->orWhereRaw("DATE_FORMAT(updated_at,'%Y/%m/%d') like ?", ["%$request->search%"])->count();
          }
          
          return response([
            'status'=>'success',
            'apilist'=>$apis->get(),
-           'total'=>Api::count()
+           'total'=>$total
          ],200);
      }
       /**

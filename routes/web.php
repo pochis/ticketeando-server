@@ -17,6 +17,7 @@ $router->get('/', function () use ($router) {
 $router->group(['prefix' => 'api/v1'], function () use ($router) {
     
     $router->post('auth','AuthController@login');
+    $router->post('recovery','AuthController@resetPassword');
     
     $router->group(['middleware' => 'auth'], function () use ($router) {
         
