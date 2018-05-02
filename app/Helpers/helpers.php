@@ -5,7 +5,7 @@ use App\Helpers\Util;
 
 if (! function_exists('getIp')) {
     /**
-     * average of array total given.
+     * retrieve real user ip
      *
      * @param  array  $array
      * @return string

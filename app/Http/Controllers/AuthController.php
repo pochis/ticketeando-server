@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
 use App\Api;
+use App\User;
 use Illuminate\Http\Request;
 use App\Traits\MailNotification;
 use Illuminate\Support\Facades\Hash;
